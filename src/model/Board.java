@@ -9,6 +9,11 @@ public class Board {
         this.tail = null;
     }
 
+
+
+
+    // GETTERS AND SETTERS
+
     public Slot getHead() {
         return head;
     }
@@ -24,4 +29,5 @@ public class Board {
     public void setTail(Slot tail) {
         this.tail = tail;
     }
+
 }

@@ -10,4 +10,6 @@ public class Controller {
         this.players = new PlayerList();
         this.board = new Board();
     }
+
+
 }
