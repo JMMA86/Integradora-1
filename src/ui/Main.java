@@ -13,6 +13,5 @@ public class Main {
 
     private void showMenu() {
 
-        System.out.println("hello");
     }
 }
