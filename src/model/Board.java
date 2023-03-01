@@ -67,6 +67,8 @@ public class Board {
 
         int stepsBack = (start - end) * -1;
 
+        if (searchSlotByValue(stepsBack).getSteps() != 1) return; //Making sure that the end isn't pointing to another slot
+
         newSnake.setSteps(stepsBack);
 
         addSnakes(totalSnakes, ++iterator);
