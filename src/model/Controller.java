@@ -21,4 +21,7 @@ public class Controller {
         insertNodes(++current, limit);
     }
 
+    public void addSnakes() {
+    }
+
 }
