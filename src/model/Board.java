@@ -53,7 +53,7 @@ public class Board {
 
         int start = random.nextInt(totalSlots / numberOfRows, totalSlots); //It starts from total / rows to avoid row 1
 
-        int startRow = findSlotColumn(start); //The row of the start of the snake
+        int startRow = findSlotRow(start); //The row of the start of the snake
 
         Slot newSnake = searchSlotByValue(start);
 
@@ -81,13 +81,13 @@ public class Board {
      * @param value The value of the slot.
      * @return This function returns an int with the row of the value given to it.
      * */
-    public int findSlotColumn(int value) {
-        return findSlotColumn(value, numberOfColumns, 0);
+    public int findSlotRow(int value) {
+        return findSlotRow(value, numberOfColumns, 0);
     }
 
-    private int findSlotColumn(int value, int iterator, int acu) {
+    private int findSlotRow(int value, int iterator, int acu) {
         if (value >= totalSlots - (numberOfRows * iterator)) { // This must start in rows - 1 to check from the lowest row to the higher
-            return findSlotColumn(value, --iterator, ++acu);
+            return findSlotRow(value, --iterator, ++acu);
         }
 
         return acu;
