@@ -43,16 +43,21 @@ public class Board {
     }
 
     public void addSnakes() {
+        int totalSnakes = random.nextInt(1, numberOfRows * numberOfColumns);
+
+        addSnakes(totalSnakes, 0);
+    }
+
+    private void addSnakes(int totalSnakes, int iterator) {
+        if (totalSnakes < iterator) return;
+
         int start = random.nextInt(totalSlots / numberOfRows, totalSlots); //It starts from total / rows to avoid row 1
 
         int startRow = findSlotColumn(start); //The row of the start of the snake
 
         Slot newSnake = searchSlotByValue(start);
 
-        if (newSnake.getSteps() != 1) {
-            //Thinking if I must put a reload of the function here
-            return;
-        }
+        if (newSnake.getSteps() != 1) return;
 
         int lowestRange = head.getValue() + 1; // The lowest row except the start
 
@@ -60,9 +65,20 @@ public class Board {
 
         int end = random.nextInt(lowestRange, maxRange);
 
+        int stepsBack = (start - end) * -1;
 
+        newSnake.setSteps(stepsBack);
+
+        addSnakes(totalSnakes, ++iterator);
     }
 
+    /** This functions takes a value and return in which row is the value placed.
+     * Initially it start with the lowest row (total - (rows * columns)) and will subtract
+     * till the value is bigger than the actual subtract.
+     *
+     * @param value The value of the slot.
+     * @return This function returns an int with the row of the value given to it.
+     * */
     public int findSlotColumn(int value) {
         return findSlotColumn(value, numberOfColumns, 0);
     }
