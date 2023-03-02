@@ -20,6 +20,9 @@ public class Board {
         this.totalSlots = columns * rows;
     }
 
+    /** This method adds a new Slot to the current board in the last position.
+     * @param newSlot the new Slot to be added
+     */
     public void insertSlot(Slot newSlot) {
         if (head == null) {
             head = newSlot;
@@ -30,6 +33,10 @@ public class Board {
         tail = newSlot;
     }
 
+    /** This function search a Slot based on the specified value
+     * @param value the value of the slot to be searched
+     * @return foundSlot whose value matches with the target value
+     */
     public Slot searchSlotByValue(int value) {
         return searchSlotByValue(head, value);
     }
@@ -42,9 +49,10 @@ public class Board {
         return pointer;
     }
 
-    public void addSnakes() {
-        int totalSnakes = random.nextInt(1, numberOfRows * numberOfColumns);
-
+    /** This function adds the number of snakes that the user specified
+     * @param totalSnakes The total number of snakes that are going to be added
+     */
+    public void addSnakes(int totalSnakes) {
         addSnakes(totalSnakes, 0);
     }
 
@@ -70,21 +78,17 @@ public class Board {
         addSnakes(totalSnakes, ++iterator);
     }
 
-    public String printSlots() {
-        return printSlots(tail, "", "", false);
-    }
-
 
     /**
      * This function prints the slots of the board, based on the matrix structure.
      * It accumulates all the rows in the variable rowStr and add it to the board every time it is in a slot that divides exactly the number of rows
-     * @param current the Slot that iterates from the tail, to the head.
-     * @param boardStr an empty String that will be accumulated with the matrix like board
-     * @param rowStr an empty String that will accumulate the slots in the current row
-     * @param snakesLadders a boolean that indicates if we are going to print the snakes and ladders or not
      * @return boardStr the board that is going to be showed to the user
      */
-    public String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
+    public String printSlots() {
+        return printSlots(tail, "", "", false);
+    }
+
+    private String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
         if(current == null || current.getValue() % numberOfColumns == 0) {
             boardStr += " \n";
             boardStr += rowStr;
