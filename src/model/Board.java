@@ -5,7 +5,6 @@ import java.util.Random;
 public class Board {
     private Slot head;
     private Slot tail;
-
     private final Random random;
     private int numberOfColumns;
     private int numberOfRows;
@@ -42,6 +41,10 @@ public class Board {
     }
 
     public Slot searchSlotByValue(Slot pointer, int value) {
+        if (pointer == null) {
+            return null;
+        }
+
         if (pointer.getValue() != value) {
             pointer = searchSlotByValue((Slot) pointer.getNext(), value);
         }
@@ -59,7 +62,7 @@ public class Board {
     private void addSnakes(int totalSnakes, int iterator) {
         if (totalSnakes < iterator) return;
 
-        int start = random.nextInt(totalSlots / numberOfRows, totalSlots); //It starts from total / rows to avoid row 1
+        int start = random.nextInt(totalSlots / numberOfRows + 1, totalSlots); //It starts from total / rows to avoid row 1
         int startRow = findSlotRow(start); //The row of the start of the snake
 
         Slot newSnake = searchSlotByValue(start);
@@ -71,7 +74,7 @@ public class Board {
         int end = random.nextInt(lowestRange, maxRange);
         int stepsBack = (start - end) * -1;
 
-        if (searchSlotByValue(stepsBack).getSteps() != 1) return; //Making sure that the end isn't pointing to another slot
+        if (searchSlotByValue(end).getSteps() != 1) return; //Making sure that the end isn't pointing to another slot
 
         newSnake.setSteps(stepsBack);
 
@@ -121,15 +124,15 @@ public class Board {
      * @return This function returns an int with the row of the value given to it.
      * */
     public int findSlotRow(int value) {
-        return findSlotRow(value, numberOfColumns, 0);
+        return findSlotRow(value, 1);
     }
 
-    private int findSlotRow(int value, int iterator, int acu) {
-        if (value >= totalSlots - (numberOfRows * iterator)) { // This must start in rows - 1 to check from the lowest row to the higher
-            return findSlotRow(value, --iterator, ++acu);
+    public int findSlotRow(int value, int iterator) {
+        if (value >= numberOfColumns * iterator) { // This must start in rows - 1 to check from the lowest row to the higher
+            return findSlotRow(value, ++iterator);
         }
 
-        return acu;
+        return iterator;
     }
 
     // GETTERS AND SETTERS

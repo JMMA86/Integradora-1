@@ -18,7 +18,7 @@ public class Controller {
     public void generateBoard(int rows, int columns) {
         this.board = new Board(rows, columns);
         insertNodes(1, rows*columns);
-        // board.addSnakes();
+        board.addSnakes((rows * columns)/2);
     }
 
     /** It creates the number of slots that is indicated, from the initial value of current, to the limit value
