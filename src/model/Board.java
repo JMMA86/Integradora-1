@@ -81,6 +81,34 @@ public class Board {
         addSnakes(totalSnakes, ++iterator);
     }
 
+    /** This function adds the number of ladders that the user specified
+     * @param totalLadders The total number of ladders that are going to be added
+     */
+    public void addLadders(int totalLadders) {
+        addLadders(totalLadders, 0);
+    }
+
+    private void addLadders(int totalLadders, int iterator) {
+        if (totalLadders < iterator) return;
+
+        int start = random.nextInt(head.getValue() + 1, totalSlots - numberOfColumns);
+        int startRow = findSlotRow(start); //The row of the start of the ladder
+
+        Slot newLadder = searchSlotByValue(start);
+
+        if (newLadder.getSteps() != 1) return;
+
+        int lowestRange = numberOfColumns * startRow + 1;
+        int end = random.nextInt(lowestRange, totalSlots);
+        int stepsForward = (start - end);
+
+        if (searchSlotByValue(end).getSteps() != 1) return;
+
+        newLadder.setSteps(stepsForward);
+
+        addLadders(totalLadders, ++iterator);
+    }
+
 
     /**
      * This function prints the slots of the board, based on the matrix structure.
@@ -128,7 +156,7 @@ public class Board {
     }
 
     public int findSlotRow(int value, int iterator) {
-        if (value >= numberOfColumns * iterator) { // This must start in rows - 1 to check from the lowest row to the higher
+        if (value > numberOfColumns * iterator) { // This must start in rows - 1 to check from the lowest row to the higher
             return findSlotRow(value, ++iterator);
         }
 

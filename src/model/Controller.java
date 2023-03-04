@@ -18,7 +18,8 @@ public class Controller {
     public void generateBoard(int rows, int columns) {
         this.board = new Board(rows, columns);
         insertNodes(1, rows*columns);
-        board.addSnakes((rows * columns)/2);
+        board.addSnakes((int) (((rows * columns)/2) * 0.8));
+        board.addLadders((int) (((rows * columns)/2) * 0.8));
     }
 
     /** Validates if the values entered to create the table correspond to a dimension equal to or greater than 4x4
@@ -59,7 +60,7 @@ public class Controller {
      * @return Returns if the player has been created
      */
     public String createPlayer(String symbol) {
-        if (validateSymbol(symbol.charAt(0), 0) == true) {
+        if (validateSymbol(symbol.charAt(0), 0)) {
             players.addPlayer(new Player(symbol.charAt(0)));
             return "Created player.";
         } else {
