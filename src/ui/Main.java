@@ -18,6 +18,9 @@ public class Main {
         // Testing
     }
 
+    /** Shows the initial menu of the game
+     * Show the main menu of the game on the console
+     */
     private void showMenu() {
         System.out.print("""
                 \n///// Hello, welcome to Snakes and Ladders /////
@@ -37,6 +40,9 @@ public class Main {
         }
     }
 
+    /** Request the table values to create in the game
+     * Requests the number of columns and rows to use to create the game table
+     */
     private void play() {
         // Generating the board
         System.out.println("\nTo start the game, enter the number of rows and columns that the board will have (min. 4 x 4):");
@@ -55,6 +61,11 @@ public class Main {
         }
     }
 
+    /** Create the game players (3)
+     * Request the symbols that each player in the game will use (3)
+     * @param maxPlayers
+     * @param counter
+     */
     public void createPlayers(int maxPlayers, int counter) {
         //When counter == maxPlayers -> stop
         //Select symbols for each player
@@ -71,6 +82,9 @@ public class Main {
         }
     }
 
+    /** Print the menu of the game already initialized
+     * Show available game actions on console
+     */
     public void inGameMenu() {
         System.out.print("""
                 \n-In Game-
