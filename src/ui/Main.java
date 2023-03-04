@@ -3,8 +3,8 @@ import model.Controller;
 import java.util.Scanner;
 
 public class Main {
-    private Controller controller;
-    private Scanner sc;
+    private final Controller controller;
+    private final Scanner sc;
     public Main() {
         this.controller = new Controller();
         this.sc = new Scanner(System.in);
@@ -50,7 +50,7 @@ public class Main {
         int rows = sc.nextInt();
         System.out.print("Columns: ");
         int columns = sc.nextInt();
-        if (controller.validateBoard(rows, columns) == false) {
+        if (!controller.validateBoard(rows, columns)) {
             System.out.println("\nError. Invalid inputs.");
             play();
         } else {
