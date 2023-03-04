@@ -95,9 +95,8 @@ public class Board {
 
         if (newLadder.getSteps() != 1) return;
 
-        int lowestRange = startRow + 1;
-        int maxRange = totalSlots - 1;
-        int end = random.nextInt(lowestRange, maxRange);
+        int lowestRange = numberOfColumns * startRow + 1;
+        int end = random.nextInt(lowestRange, totalSlots);
         int stepsForward = (start - end);
 
         if (searchSlotByValue(end).getSteps() != 1) return;
