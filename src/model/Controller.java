@@ -11,7 +11,7 @@ public class Controller {
     }
 
     public boolean validateBoard(int rows, int columns) {
-        if (rows > 3 && rows > 3) {
+        if (rows > 3 && columns > 3) {
             generateBoard(rows, columns);
             return true;
         } else {
@@ -22,7 +22,7 @@ public class Controller {
     public void generateBoard(int rows, int columns) {
         this.board = new Board(rows, columns);
         insertNodes(1, rows*columns);
-        board.addSnakes();
+        //board.addSnakes();
     }
     public void insertNodes(int current, int limit) {
         if(current > limit) return;
@@ -31,8 +31,33 @@ public class Controller {
         insertNodes(++current, limit);
     }
 
-    public void createPlayer(char symbol) {
-        players.addPlayer(symbol);
+    public String createPlayer(String symbol) {
+        if (validateSymbol(symbol.charAt(0), 0) == true) {
+            players.addPlayer(new Player(symbol.charAt(0)));
+            return "Created player.";
+        } else {
+            return "Invalid option.";
+        }
+    }
+
+    public boolean validateSymbol(char symbol, int i) {
+        //Put valid symbols here
+        String symbols = "*!OX%$#+&";
+        if (i == 9) {
+            return false;
+        } else {
+            //Validate if the symbol is correct
+            if (symbols.charAt(i) == symbol) {
+                //Validate if the symbol has been chosen
+                if (players.validatePlayer(symbols.charAt(i)) == false) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return validateSymbol(symbol, ++i);
+            }
+        }
     }
 
 }
