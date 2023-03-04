@@ -84,7 +84,6 @@ public class Board {
     /** This function adds the number of ladders that the user specified
      * @param totalLadders The total number of ladders that are going to be added
      */
-    //TODO make sure that every snake specified by the user is implemented
     public void addLadders(int totalLadders) {
         addLadders(totalLadders, 0);
     }
