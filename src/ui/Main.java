@@ -50,9 +50,9 @@ public class Main {
         int rows = sc.nextInt();
         System.out.print("Columns: ");
         int columns = sc.nextInt();
-<<<<<<< HEAD
         if (!controller.validateBoard(rows, columns)) {
             System.out.println("\nError. Invalid inputs.");
+            controller.generateBoard(rows, columns);
             play();
         } else {
             sc.nextLine();
@@ -96,10 +96,6 @@ public class Main {
                 Option: """);
         int option = sc.nextInt();
         //Create switch
-=======
-        controller.generateBoard(rows, columns);
-
         System.out.println(controller.showBoard());
->>>>>>> feature/r5_show_board
     }
 }
