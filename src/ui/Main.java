@@ -11,8 +11,8 @@ public class Main {
     }
     public static void main(String[] args) {
         Main main = new Main();
-        // main.test();
-        main.showMenu();
+        main.test();
+        // main.showMenu();
     }
     private void test() {
         // Testing
@@ -50,9 +50,13 @@ public class Main {
         int rows = sc.nextInt();
         System.out.print("Columns: ");
         int columns = sc.nextInt();
-        if (!controller.validateBoard(rows, columns)) {
+        System.out.print("Snakes: ");
+        int snakes = sc.nextInt();
+        System.out.print("Ladders: ");
+        int ladders = sc.nextInt();
+        if (!controller.validateBoard(rows, columns, snakes, ladders)) {
             System.out.println("\nError. Invalid inputs.");
-            controller.generateBoard(rows, columns);
+            controller.generateBoard(rows, columns, snakes, ladders);
             play();
         } else {
             sc.nextLine();
