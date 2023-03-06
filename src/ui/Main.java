@@ -52,9 +52,9 @@ public class Main {
         int columns = sc.nextInt();
         if (!controller.validateBoard(rows, columns)) {
             System.out.println("\nError. Invalid inputs.");
-            controller.generateBoard(rows, columns);
             play();
         } else {
+            controller.generateBoard(rows, columns);
             sc.nextLine();
             System.out.println("\nSetting up players...");
             createPlayers(3, 0); //Define max players
