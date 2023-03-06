@@ -15,11 +15,11 @@ public class Controller {
      * @param rows the number of rows of the board
      * @param columns the number of columns of the board
      */
-    public void generateBoard(int rows, int columns) {
+    public void generateBoard(int rows, int columns, int snakes, int ladders) {
         this.board = new Board(rows, columns);
         insertNodes(1, rows*columns);
-        board.addSnakes((int) (((rows * columns)/2) * 0.8));
-        board.addLadders((int) (((rows * columns)/2) * 0.8));
+        board.addSnakes(snakes);
+        board.addLadders(ladders);
     }
 
     /** Validates if the values entered to create the table correspond to a dimension equal to or greater than 4x4
@@ -27,9 +27,9 @@ public class Controller {
      * @param rows the number of rows of the board
      * @param columns the number of columns of the board
      */
-    public boolean validateBoard(int rows, int columns) {
+    public boolean validateBoard(int rows, int columns, int snakes, int ladders) {
         if (rows > 3 && columns > 3) {
-            generateBoard(rows, columns);
+            generateBoard(rows, columns, snakes, ladders);
             return true;
         } else {
             return false;
@@ -83,11 +83,7 @@ public class Controller {
             //Validate if the symbol is correct
             if (symbols.charAt(i) == symbol) {
                 //Validate if the symbol has been chosen
-                if (players.validatePlayer(symbols.charAt(i)) == false) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return !players.validatePlayer(symbols.charAt(i));
             } else {
                 return validateSymbol(symbol, ++i);
             }
