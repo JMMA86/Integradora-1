@@ -29,5 +29,7 @@ public class Main {
         System.out.print("columns: ");
         int columns = sc.nextInt();
         controller.generateBoard(rows, columns);
+
+        System.out.println(controller.showBoard());
     }
 }
