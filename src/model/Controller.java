@@ -40,18 +40,27 @@ public class Controller {
      * @return boardStr the board that is going to be shown to the user
      */
     public String showBoard() {
-        return board.printSlots();
+        return board.printSlots(false);
     }
 
     /** It creates the number of slots that is indicated, from the initial value of current, to the limit value
      * @param current the current value for the new Node
      * @param limit the value of the last node to be created
      */
+
     public void insertNodes(int current, int limit) {
         if(current > limit) return;
         Slot newSlot = new Slot(current);
         board.insertSlot(newSlot);
         insertNodes(++current, limit);
+    }
+
+
+    /** It calls the recursive method print slots, including the snakes and ladders.
+     * @return boardStr the board that is going to be shown to the user, it includes the snakes and ladders
+     */
+    public String showSnakesAndLadders() {
+        return board.printSlots(true);
     }
 
     /** Create a player and add him to the game

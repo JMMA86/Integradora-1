@@ -98,7 +98,7 @@ public class Board {
     }
 
     private void addLadders(int totalLadders, int iterator) {
-        if (totalLadders < iterator) return;
+        if (totalLadders <= iterator) return;
 
         int start = random.nextInt(head.getValue() + 1, totalSlots - numberOfColumns);
 
@@ -106,15 +106,25 @@ public class Board {
 
         Slot newLadder = searchSlotByValue(start);
 
-        if (newLadder.getSteps() != 1) return;
+        if (newLadder.getLinkId() != null) {
+            addLadders(totalLadders, iterator);
+            return;
+        }
 
         int lowestRange = numberOfColumns * startRow + 1;
         int end = random.nextInt(lowestRange, totalSlots);
         int stepsForward = (start - end);
+        Slot linkedLadder = searchSlotByValue(end); // The slot to which the snake is going to aim
 
-        if (searchSlotByValue(end).getSteps() != 1) return;
+        if (linkedLadder.getLinkId() != null) {
+            addLadders(totalLadders, iterator);
+            return;
+        }
 
         newLadder.setSteps(stepsForward);
+        String id = Integer.toString(1+iterator);
+        newLadder.setLinkId(id);
+        linkedLadder.setLinkId(id);
 
         addLadders(totalLadders, ++iterator);
     }
@@ -125,8 +135,8 @@ public class Board {
      * It accumulates all the rows in the variable rowStr and add it to the board every time it is in a slot that divides exactly the number of rows
      * @return boardStr the board that is going to be showed to the user
      */
-    public String printSlots() {
-        return printSlots(tail, "", "", true);
+    public String printSlots(boolean snakesLadders) {
+        return printSlots(tail, "", "", snakesLadders);
     }
 
     private String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
