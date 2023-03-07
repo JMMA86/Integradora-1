@@ -58,6 +58,7 @@ public class Main {
             sc.nextLine();
             System.out.println("\nSetting up players...");
             createPlayers(3, 0); //Define max players
+            controller.startTimer();
             inGameMenu();
         }
     }
@@ -87,15 +88,20 @@ public class Main {
      * Show available game actions on console
      */
     public void inGameMenu() {
+        System.out.println(controller.showBoard());
         System.out.print("""
                 \n-In Game-
                 Player turn: xxx (configure)
                 1. Roll dice
-                2. Show board
-                3. Show snakes and ladders
-                Option: """);
+                2. Show snakes and ladders
+                Option:\s""");
         int option = sc.nextInt();
-        //Create switch
-        System.out.println(controller.showBoard());
+
+        switch (option) {
+            case 1 -> System.out.println("Put here the corresponding method.");
+            case 2 -> System.out.println("Put here the corresponding method.");
+            default -> System.out.println("Invalid input");
+        }
+        inGameMenu();
     }
 }
