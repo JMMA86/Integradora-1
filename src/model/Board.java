@@ -83,6 +83,7 @@ public class Board {
         }
 
         newSnake.setSteps(stepsBack);
+        linkedSnake.setSteps(0);
         String id = Character.toString((char)(65+iterator));
         newSnake.setLinkId(id);
         linkedSnake.setLinkId(id);
@@ -113,7 +114,7 @@ public class Board {
 
         int lowestRange = numberOfColumns * startRow + 1;
         int end = random.nextInt(lowestRange, totalSlots);
-        int stepsForward = (start - end);
+        int stepsForward = (end - start);
         Slot linkedLadder = searchSlotByValue(end); // The slot to which the snake is going to aim
 
         if (linkedLadder.getLinkId() != null) {
@@ -122,46 +123,12 @@ public class Board {
         }
 
         newLadder.setSteps(stepsForward);
+        linkedLadder.setSteps(0);
         String id = Integer.toString(1+iterator);
         newLadder.setLinkId(id);
         linkedLadder.setLinkId(id);
 
         addLadders(totalLadders, ++iterator);
-    }
-
-
-    /**
-     * This function prints the slots of the board, based on the matrix structure.
-     * It accumulates all the rows in the variable rowStr and add it to the board every time it is in a slot that divides exactly the number of rows
-     * @return boardStr the board that is going to be showed to the user
-     */
-    public String printSlots(boolean snakesLadders) {
-        return printSlots(tail, "", "", snakesLadders);
-    }
-
-    private String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
-        if(current == null || current.getValue() % numberOfColumns == 0) {
-            boardStr += " \n";
-            boardStr += rowStr;
-            rowStr = "";
-        }
-        if(current == null) return boardStr; // base case
-
-        int currentRow = (int)Math.ceil((double)current.getValue()/numberOfColumns);
-
-        String slotValue = "[ ";
-        if(snakesLadders) {
-            slotValue += current.getLinkId() != null ? current.getLinkId() : " ";
-        } else {
-            slotValue += current.getValue();
-        }
-        slotValue += " ]";
-        if(currentRow % 2 == 0) {
-            rowStr = rowStr + " " + slotValue;
-        } else {
-            rowStr = slotValue + " " + rowStr;
-        }
-        return printSlots((Slot)current.getPrevious(), boardStr, rowStr, snakesLadders); // recursive call
     }
 
 

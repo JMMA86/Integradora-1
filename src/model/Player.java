@@ -2,6 +2,7 @@ package model;
 
 public class Player extends Node {
     private char id;
+    private Slot currentSlot;
 
     public Player(char id) {
         super();
@@ -14,5 +15,13 @@ public class Player extends Node {
 
     public void setId(char id) {
         this.id = id;
+    }
+
+    public Slot getCurrentSlot() {
+        return currentSlot;
+    }
+
+    public void setCurrentSlot(Slot currentSlot) {
+        this.currentSlot = currentSlot;
     }
 }

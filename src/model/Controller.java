@@ -1,18 +1,26 @@
 package model;
 
+import java.util.Random;
+
 public class Controller {
     private ScoreTree scores;
     private PlayerList players;
+    private Player currentPlayer;
     private Board board;
     private Thread t;
     private boolean running;
     private int seconds;
+    private Random rnd;
+    boolean finishedGame;
 
     public Controller() {
         this.scores = new ScoreTree();
         this.players = new PlayerList();
         this.running = false;
         this.seconds = 600;
+        this.currentPlayer = null;
+        this.rnd = new Random();
+        this.finishedGame = false;
     }
 
     public void startTimer() {
@@ -65,7 +73,7 @@ public class Controller {
      * @return boardStr the board that is going to be shown to the user
      */
     public String showBoard() {
-        return board.printSlots(false);
+        return printSlots(false);
     }
 
     /** It creates the number of slots that is indicated, from the initial value of current, to the limit value
@@ -85,7 +93,61 @@ public class Controller {
      * @return boardStr the board that is going to be shown to the user, it includes the snakes and ladders
      */
     public String showSnakesAndLadders() {
-        return board.printSlots(true);
+        return printSlots(true);
+    }
+
+    /**
+     * This function prints the slots of the board, based on the matrix structure.
+     * It accumulates all the rows in the variable rowStr and add it to the board every time it is in a slot that divides exactly the number of rows
+     * @return boardStr the board that is going to be showed to the user
+     */
+    public String printSlots(boolean snakesLadders) {
+        return printSlots(board.getTail(), "", "", snakesLadders);
+    }
+
+    private String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
+        if(current == null || current.getValue() % board.getNumberOfColumns() == 0) {
+            boardStr += " \n";
+            boardStr += rowStr;
+            rowStr = "";
+        }
+        if(current == null) return "\n\n" + ( (snakesLadders) ? "Snakes and Ladders:" : "Current Board:" ) + boardStr; // base case
+
+        int currentRow = (int)Math.ceil((double)current.getValue()/board.getNumberOfColumns());
+
+        String slotValue = "[ ";
+        if(snakesLadders) {
+            slotValue += current.getLinkId() != null ? current.getLinkId() : "-";
+        } else {
+            String slotPlayers = getSlotPlayers(current, players.getHead(), false);
+            slotValue += String.format("%-4s", current.getValue()) + String.format("%-3s", slotPlayers);
+        }
+        slotValue += " ]";
+        if(currentRow % 2 == 0) {
+            if(rowStr.equals("")) {
+                rowStr += slotValue;
+            } else {
+                rowStr = rowStr + " " + slotValue;
+            }
+        } else {
+            rowStr = slotValue + " " + rowStr;
+        }
+        return printSlots((Slot)current.getPrevious(), boardStr, rowStr, snakesLadders); // recursive call
+    }
+
+    private String getSlotPlayers(Slot current, Player player, boolean passed) {
+        if(player == players.getHead()) {
+            if(!passed) {
+                passed = true;
+            } else {
+                return "";
+            }
+        }
+        if(player.getCurrentSlot() == current) {
+            return player.getId() + getSlotPlayers(current, (Player)player.getNext(), passed);
+        } else {
+            return getSlotPlayers(current, (Player)player.getNext(), passed);
+        }
     }
 
     /** Create a player and add him to the game
@@ -95,7 +157,9 @@ public class Controller {
      */
     public String createPlayer(String symbol) {
         if (validateSymbol(symbol.charAt(0), 0)) {
-            players.addPlayer(new Player(symbol.charAt(0)));
+            Player newPlayer = new Player(symbol.charAt(0));
+            newPlayer.setCurrentSlot(board.getHead());
+            players.addPlayer(newPlayer);
             return "Created player.";
         } else {
             return "Invalid option.";
@@ -123,4 +187,71 @@ public class Controller {
             }
         }
     }
+
+    /** It gets a new random number from 1 to 6, and sets the new position to the current player.
+     * @return gameStatus it is true only when a player gets to the last position, that is, when someone wins the game
+     */
+    public String rollDice() {
+        // calculating movement
+        if(currentPlayer == null) currentPlayer = players.getHead();
+        int steps = rnd.nextInt(1, 7);
+        Slot newPosition = movePlayer(currentPlayer.getCurrentSlot(), steps);
+
+        // Generating output message
+        String status = "\nRoll Dice Summary:";
+        status += String.format("\n - Player '%s' moved %d steps", currentPlayer.getId(), steps);
+        int initialPosition = currentPlayer.getCurrentSlot().getValue();
+        int delta = newPosition.getValue() - initialPosition;
+        if(delta != steps) {
+            if(newPosition != board.getTail()) {
+                status += String.format("\n - Player found a %s at %d position", (delta < steps) ? ("snake") : ("ladder"), initialPosition+steps);
+            }
+        } else {
+            status += "\n - Player did not found any snake or ladder";
+        }
+        if(newPosition != board.getTail()) {
+            status += String.format("\n - The new position for player '%s' is %d", currentPlayer.getId(), newPosition.getValue());
+        } else {
+            if(newPosition == board.getTail()) finishedGame = true;
+            status += String.format("\n - Player '%s' won the game!!", currentPlayer.getId());
+        }
+
+        // updating positions
+
+        currentPlayer.setCurrentSlot(newPosition);
+        currentPlayer = (Player)currentPlayer.getNext();
+        return status;
+    }
+
+
+    /** This method gets the new position, given a current slot and a number of steps either forward or backward
+     * @param slot The initial position
+     * @param steps The number of steps to move, if positive it moves forward, otherwise, backward.
+     * @return newPosition The new slot to be assigned to the player
+     */
+    private Slot movePlayer(Slot slot, int steps) {
+        if(slot == board.getHead() && steps <= 0) return slot;
+        if(slot == board.getTail()) return slot; // stop forced
+        if(steps == 0) { // finished initial movement
+            if(slot.getLinkId() == null) { // regular slot
+                return slot;
+            } else { // snake or ladders
+                if(slot.getSteps() == 0) {
+                    return slot;
+                } else {
+                    return movePlayer(slot, slot.getSteps());
+                }
+            }
+        }
+        if(steps < 0) {
+            return movePlayer((Slot)slot.getPrevious(), ++steps);
+        } else {
+            return movePlayer((Slot)slot.getNext(), --steps); // going forward
+        }
+    }
+
+    public boolean hasGameFinished() {
+        return finishedGame;
+    }
+
 }

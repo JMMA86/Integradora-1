@@ -16,6 +16,27 @@ public class Main {
     }
     private void test() {
         // Testing
+
+        /*
+        To play a new turn call the method rollDice
+        To show the board, either showSnakesAndLadders or showBoard
+        To finish the game, call the method hasGameFinished
+         */
+        controller.generateBoard(4, 5, 2, 3);
+        controller.createPlayer("#");
+        controller.createPlayer("$");
+        controller.createPlayer("+");
+        System.out.println(controller.showBoard());
+        for(int i=0; i<10; i++) {
+            System.out.println(controller.rollDice());
+            System.out.println(controller.showSnakesAndLadders());
+            System.out.println(controller.showBoard());
+            if(controller.hasGameFinished()) {
+                System.out.println("Game finished");
+                break;
+            }
+        }
+
     }
 
     /** Shows the initial menu of the game
