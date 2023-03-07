@@ -50,11 +50,15 @@ public class Main {
         int rows = sc.nextInt();
         System.out.print("Columns: ");
         int columns = sc.nextInt();
-        if (!controller.validateBoard(rows, columns)) {
+        System.out.print("Snakes: ");
+        int snakes = sc.nextInt();
+        System.out.print("Ladders: ");
+        int ladders = sc.nextInt();
+        if (!controller.validateBoard(rows, columns, snakes, ladders)) {
             System.out.println("\nError. Invalid inputs.");
             play();
         } else {
-            controller.generateBoard(rows, columns);
+            controller.generateBoard(rows, columns, snakes, ladders);
             sc.nextLine();
             System.out.println("\nSetting up players...");
             createPlayers(3, 0); //Define max players
@@ -88,7 +92,6 @@ public class Main {
      * Show available game actions on console
      */
     public void inGameMenu() {
-        System.out.println(controller.showBoard());
         System.out.print("""
                 \n-In Game-
                 Player turn: xxx (configure)

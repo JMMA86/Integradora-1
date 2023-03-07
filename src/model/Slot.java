@@ -3,11 +3,13 @@ package model;
 public class Slot extends Node {
     private int value;
     private int steps;
+    private String linkId;
 
     public Slot(int value) {
         super();
         this.value = value;
-        this.steps = 1;
+        this.steps = 0;
+        this.linkId = null;
     }
 
     public int getValue() {
@@ -24,5 +26,13 @@ public class Slot extends Node {
 
     public void setSteps(int steps) {
         this.steps = steps;
+    }
+
+    public String getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(String linkId) {
+        this.linkId = linkId;
     }
 }

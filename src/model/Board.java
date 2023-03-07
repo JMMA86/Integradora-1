@@ -60,23 +60,32 @@ public class Board {
     }
 
     private void addSnakes(int totalSnakes, int iterator) {
-        if (totalSnakes < iterator) return;
+        if (totalSnakes <= iterator) return;
 
         int start = random.nextInt(totalSlots / numberOfRows + 1, totalSlots); //It starts from total / rows to avoid row 1
         int startRow = findSlotRow(start); //The row of the start of the snake
 
         Slot newSnake = searchSlotByValue(start);
 
-        if (newSnake.getSteps() != 1) return;
+        if (newSnake.getLinkId() != null)  {
+            addSnakes(totalSnakes, iterator);
+            return;
+        }
 
         int lowestRange = head.getValue() + 1; // The lowest row except the start
         int maxRange = start - (start - (numberOfColumns * (startRow - 1))); // The higher row in which start is not included
         int end = random.nextInt(lowestRange, maxRange);
         int stepsBack = (start - end) * -1;
-
-        if (searchSlotByValue(end).getSteps() != 1) return; //Making sure that the end isn't pointing to another slot
+        Slot linkedSnake = searchSlotByValue(end); // The slot to which the snake is going to aim
+        if (linkedSnake.getLinkId() != null) {
+            addSnakes(totalSnakes, iterator);
+            return; //Making sure that the end isn't pointing to another slot
+        }
 
         newSnake.setSteps(stepsBack);
+        String id = Character.toString((char)(65+iterator));
+        newSnake.setLinkId(id);
+        linkedSnake.setLinkId(id);
 
         addSnakes(totalSnakes, ++iterator);
     }
@@ -89,22 +98,33 @@ public class Board {
     }
 
     private void addLadders(int totalLadders, int iterator) {
-        if (totalLadders < iterator) return;
+        if (totalLadders <= iterator) return;
 
         int start = random.nextInt(head.getValue() + 1, totalSlots - numberOfColumns);
+
         int startRow = findSlotRow(start); //The row of the start of the ladder
 
         Slot newLadder = searchSlotByValue(start);
 
-        if (newLadder.getSteps() != 1) return;
+        if (newLadder.getLinkId() != null) {
+            addLadders(totalLadders, iterator);
+            return;
+        }
 
         int lowestRange = numberOfColumns * startRow + 1;
         int end = random.nextInt(lowestRange, totalSlots);
         int stepsForward = (start - end);
+        Slot linkedLadder = searchSlotByValue(end); // The slot to which the snake is going to aim
 
-        if (searchSlotByValue(end).getSteps() != 1) return;
+        if (linkedLadder.getLinkId() != null) {
+            addLadders(totalLadders, iterator);
+            return;
+        }
 
         newLadder.setSteps(stepsForward);
+        String id = Integer.toString(1+iterator);
+        newLadder.setLinkId(id);
+        linkedLadder.setLinkId(id);
 
         addLadders(totalLadders, ++iterator);
     }
@@ -115,8 +135,8 @@ public class Board {
      * It accumulates all the rows in the variable rowStr and add it to the board every time it is in a slot that divides exactly the number of rows
      * @return boardStr the board that is going to be showed to the user
      */
-    public String printSlots() {
-        return printSlots(tail, "", "", false);
+    public String printSlots(boolean snakesLadders) {
+        return printSlots(tail, "", "", snakesLadders);
     }
 
     private String printSlots(Slot current, String boardStr, String rowStr, boolean snakesLadders) {
@@ -129,12 +149,13 @@ public class Board {
 
         int currentRow = (int)Math.ceil((double)current.getValue()/numberOfColumns);
 
-        String slotValue;
+        String slotValue = "[ ";
         if(snakesLadders) {
-            slotValue = " [null] ";
+            slotValue += current.getLinkId() != null ? current.getLinkId() : " ";
         } else {
-            slotValue = " [" + current.getValue() + "] ";
+            slotValue += current.getValue();
         }
+        slotValue += " ]";
         if(currentRow % 2 == 0) {
             rowStr = rowStr + " " + slotValue;
         } else {
