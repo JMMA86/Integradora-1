@@ -4,10 +4,35 @@ public class Controller {
     private ScoreTree scores;
     private PlayerList players;
     private Board board;
+    private Thread t;
+    private boolean running;
+    private int seconds;
 
     public Controller() {
         this.scores = new ScoreTree();
         this.players = new PlayerList();
+        this.running = false;
+        this.seconds = 600;
+    }
+
+    public void startTimer() {
+        running = true;
+        t = new Thread(() -> {
+            while (running) {
+                try {
+                    Thread.sleep(1000);
+                    seconds--;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void stopTimer() {
+        running = false;
+        t.interrupt();
     }
 
     /** It creates the board with the rows and columns specified by the user
