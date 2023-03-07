@@ -92,6 +92,9 @@ public class Main {
      * Show available game actions on console
      */
     public void inGameMenu() {
+        //Iniciar siempre mostrando el estado del tablero actual
+        System.out.println(controller.showBoard());
+        //Menu
         System.out.print("""
                 \n-In Game-
                 Player turn: xxx (configure)
@@ -102,8 +105,8 @@ public class Main {
 
         switch (option) {
             case 1 -> System.out.println("Put here the corresponding method.");
-            case 2 -> System.out.println("Put here the corresponding method.");
-            default -> System.out.println("Invalid input");
+            case 2 -> System.out.println(controller.showSnakesAndLadders());
+            default -> System.out.println("\nInvalid input");
         }
         inGameMenu();
     }
