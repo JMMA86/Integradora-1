@@ -1,13 +1,19 @@
 package model;
 
+import java.util.Random;
+
 public class Controller {
     private ScoreTree scores;
     private PlayerList players;
+    private Player currentPlayer;
     private Board board;
+    private Random rnd;
 
     public Controller() {
         this.scores = new ScoreTree();
         this.players = new PlayerList();
+        this.currentPlayer = null;
+        this.rnd = new Random();
     }
 
     /** It creates the board with the rows and columns specified by the user
@@ -70,7 +76,9 @@ public class Controller {
      */
     public String createPlayer(String symbol) {
         if (validateSymbol(symbol.charAt(0), 0)) {
-            players.addPlayer(new Player(symbol.charAt(0)));
+            Player newPlayer = new Player(symbol.charAt(0));
+            newPlayer.setCurrentSlot(board.getHead());
+            players.addPlayer(newPlayer);
             return "Created player.";
         } else {
             return "Invalid option.";
@@ -98,4 +106,31 @@ public class Controller {
             }
         }
     }
+
+    public boolean rollDice() {
+        if(currentPlayer == null) currentPlayer = players.getHead();
+        int steps = rnd.nextInt(1, 7);
+        Slot newPosition = movePlayer(currentPlayer.getCurrentSlot(), steps);
+        if(newPosition == board.getTail()) return true;
+        currentPlayer.setCurrentSlot(newPosition);
+        currentPlayer = (Player)currentPlayer.getNext();
+        return false;
+    }
+
+    private Slot movePlayer(Slot slot, int steps) {
+        if(slot == board.getTail()) return slot; // win game
+        if(steps == 0) { // finished initial movement
+            if(slot.getLinkId() == null) { // regular slot
+                return slot;
+            } else { // snake or ladders
+                return movePlayer(slot, slot.getSteps());
+            }
+        }
+        if(steps < 0) {
+            return movePlayer((Slot)slot.getPrevious(), ++steps);
+        } else {
+            return movePlayer((Slot)slot.getNext(), --steps); // going forward
+        }
+    }
+
 }
