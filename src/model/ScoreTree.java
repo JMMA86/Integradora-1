@@ -1,10 +1,13 @@
 package model;
+import java.text.DecimalFormat;
 
 public class ScoreTree {
     private Score root;
+    private DecimalFormat formato;
 
     public ScoreTree() {
         this.root = null;
+        this.formato = new DecimalFormat("#.##");
     }
 
     public void add(Score node) {
@@ -29,6 +32,18 @@ public class ScoreTree {
                 add(node, current.getRight());
             }
         }
+    }
+
+    public String inOrderString(){
+        return inOrderString(root);
+    }
+
+    private String inOrderString(Score current){
+        if(current == null){
+            return "";
+        }
+
+        return inOrderString(current.getLeft()) + "\n[" + current.getName() + " " + formato.format(current.getValue()) + "]\n" + inOrderString(current.getRight());
     }
 
     public Score getRoot() {

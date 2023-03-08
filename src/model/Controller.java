@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Random;
+import java.text.DecimalFormat;
 
 public class Controller {
     private ScoreTree scores;
@@ -31,7 +32,7 @@ public class Controller {
             while (running) {
                 try {
                     Thread.sleep(10);
-                    seconds-=10;
+                    seconds-=0.010;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -228,8 +229,9 @@ public class Controller {
         } else {
             if(newPosition == board.getTail()) finishedGame = true;
             stopTimer();
+            DecimalFormat formato = new DecimalFormat("#.##");
             double score = this.seconds / 6;
-            status += String.format("\n - Player '%s' won the game!", currentPlayer.getId()) + "\nScore: " + (score);
+            status += String.format("\n - Player '%s' won the game!", currentPlayer.getId()) + "\nScore: " + formato.format(score);
         }
 
         // updating positions
@@ -279,8 +281,20 @@ public class Controller {
     }
 
     public void registerScore(String name) {
-        scores.add(new Score(name, this.seconds/600));
+        scores.add(new Score(name, this.seconds/6));
 
+    }
+
+    public String printScoreboard() {
+        return "Current scoreboard:\n" + "[COD] " + "[SCR]" + scores.inOrderString();
+    }
+
+    public void resetPlayers() {
+        this.players = new PlayerList();
+        this.running = false;
+        this.currentPlayer = null;
+        this.finishedGame = false;
+        this.currentTurn = 1;
     }
 
 }

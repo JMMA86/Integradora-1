@@ -132,7 +132,7 @@ public class Main {
         }
 
         if(controller.hasGameFinished()) {
-            System.out.println("Game finished");
+            sc.nextLine();
             registerScoreboard();
         } else {
             if (option == 1) {
@@ -143,11 +143,15 @@ public class Main {
     }
 
     public void registerScoreboard() {
-        System.out.println("Please, enter 3 characters to be registered on the scoreboard:");
+        System.out.print("\nPlease, enter 3 characters to be registered on the scoreboard: ");
         String name = sc.nextLine();
         if (name.length() == 3) {
             controller.registerScore(name);
             System.out.println("Score registered correctly.");
+            System.out.println(controller.printScoreboard());
+            controller.resetPlayers();
+            System.out.println("Game finished");
+            showMenu();
         } else {
             System.out.println("Error. Try again.");
             registerScoreboard();
