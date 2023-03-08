@@ -10,6 +10,10 @@ public class ScoreTree {
         this.formato = new DecimalFormat("#.##");
     }
 
+    /** Adds a score record to the game's scoreboard
+     * Add a node to the binary tree
+     * @param node Node that contains the id and the score to record to the binary tree
+     */
     public void add(Score node) {
         if (root == null) {
             root = node;
@@ -34,6 +38,10 @@ public class ScoreTree {
         }
     }
 
+    /** Generates a table from the scores recorded in order to be displayed later
+     * It traverses the binary tree inorder and returns a String with the registered values
+     * @return Binary tree data already organized
+     */
     public String inOrderString(){
         return inOrderString(root);
     }

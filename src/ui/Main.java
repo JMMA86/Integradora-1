@@ -14,6 +14,10 @@ public class Main {
         // main.test();
         main.showMenu();
     }
+
+    /**
+     * Just used for testing
+     */
     private void test() {
         // Testing
 
@@ -142,15 +146,23 @@ public class Main {
         }
     }
 
+    /** Records the winning player's score after finishing a match. Then print the score table of all registered players
+     * Ask the winning player 3 characters to be registered in the score table. The score table is then displayed and prompted to clear the console on the controller. Finally, the game restarts
+     */
     public void registerScoreboard() {
         System.out.print("\nPlease, enter 3 characters to be registered on the scoreboard: ");
         String name = sc.nextLine();
         if (name.length() == 3) {
+            //Registering info in the scoreboard
             controller.registerScore(name);
             System.out.println("Score registered correctly.");
             System.out.println(controller.printScoreboard());
+            //Resetting game
             controller.resetGame();
-            System.out.println("\nGame finished.");
+            //Cleaning console
+            System.out.println("\nGame finished.\n\nPress enter key to continue...");
+            sc.nextLine();
+            controller.cleanConsole();
             showMenu();
         } else {
             System.out.println("Error. Try again.");

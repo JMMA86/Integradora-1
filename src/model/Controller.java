@@ -25,6 +25,9 @@ public class Controller {
         this.currentTurn = 1;
     }
 
+    /** Start the game time
+     * Subtracts 0.010 every 10 milliseconds from the "seconds" attribute that will later be used to calculate the final score of the winning player in a game
+     */
     public void startTimer() {
         this.seconds = 600;
         running = true;
@@ -41,6 +44,9 @@ public class Controller {
         t.start();
     }
 
+    /** Stops time at the end of a game
+     * Stop the startTimer() method
+     */
     public void stopTimer() {
         running = false;
         t.interrupt();
@@ -99,10 +105,17 @@ public class Controller {
         return printSlots(true);
     }
 
+    /**
+     * Returns the number of the player's current turn
+     * @return current game turn
+     */
     public int getCurrentTurn() {
         return currentTurn;
     }
 
+    /** Updates the current game turn each time a player makes a move on the board
+     * Updates the current game turn by increasing by 1 each time a move is made. Being 3 players, every time the 3 moves the counter resets
+     */
     public void updateCurrentTurn() {
         if (currentTurn == 3) {
             this.currentTurn = 1;
@@ -268,6 +281,10 @@ public class Controller {
         }
     }
 
+    /** Returns the symbol of the player who has the current turn in a game
+     * Returns the symbol registered in the current player's node
+     * @return Symbol of the player with current turn
+     */
     public char getCurrentSymbol() {
         if (currentPlayer == null) {
             return players.getHead().getId();
@@ -280,15 +297,26 @@ public class Controller {
         return finishedGame;
     }
 
+    /** Record a given id and score in the score table
+     * Create a node of the Score class with a given id and score (calculated) to be added to the binary score tree
+     * @param name Id to be registered
+     */
     public void registerScore(String name) {
         scores.add(new Score(name, this.seconds/6));
 
     }
 
+    /** Generates the score table to be displayed later
+     * Requests the data of the binary tree of scores in order to be displayed later
+     * @return Table of scores generated
+     */
     public String printScoreboard() {
         return "\nCurrent scoreboard:\n" + "[COD] " + "[SCR]" + scores.inOrderString();
     }
 
+    /** After finishing a game, this method resets the players and other system attributes
+     * Resets players and game state to unfinished after finishing a game
+     */
     public void resetGame() {
         this.players = new PlayerList();
         this.running = false;
@@ -297,4 +325,19 @@ public class Controller {
         this.currentTurn = 1;
     }
 
+    /**
+     * Cleans the console after finishing a game by user action
+     */
+    public void cleanConsole() {
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
