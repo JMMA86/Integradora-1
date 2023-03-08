@@ -66,7 +66,8 @@ public class Main {
      */
     private void play() {
         // Generating the board
-        System.out.println("\nTo start the game, enter the number of rows and columns that the board will have (min. 4 x 4):");
+        System.out.println("\nTo start the game, enter the number of rows and columns that the board will have (min. 4 x 4)." +
+                "\nAlso, snakes and ladders can´t exceed 40% of the generated board.");
         System.out.print("Rows: ");
         int rows = sc.nextInt();
         System.out.print("Columns: ");
@@ -113,22 +114,43 @@ public class Main {
      * Show available game actions on console
      */
     public void inGameMenu() {
-        //Iniciar siempre mostrando el estado del tablero actual
+        //Show board
         System.out.println(controller.showBoard());
         //Menu
         System.out.print("""
                 \n-In Game-
-                Player turn: xxx (configure)
-                1. Roll dice
+                Player turn:\s""" + controller.getCurrentTurn() + "\s[" + controller.getCurrentSymbol() + """
+                ]\n1. Roll dice
                 2. Show snakes and ladders
                 Option:\s""");
         int option = sc.nextInt();
 
         switch (option) {
-            case 1 -> System.out.println("Put here the corresponding method.");
+            case 1 -> System.out.println(controller.rollDice());
             case 2 -> System.out.println(controller.showSnakesAndLadders());
             default -> System.out.println("\nInvalid input");
         }
-        inGameMenu();
+
+        if(controller.hasGameFinished()) {
+            System.out.println("Game finished");
+            registerScoreboard();
+        } else {
+            if (option == 1) {
+                controller.updateCurrentTurn();
+            }
+            inGameMenu();
+        }
+    }
+
+    public void registerScoreboard() {
+        System.out.println("Please, enter 3 characters to be registered on the scoreboard:");
+        String name = sc.nextLine();
+        if (name.length() == 3) {
+            controller.registerScore(name);
+            System.out.println("Score registered correctly.");
+        } else {
+            System.out.println("Error. Try again.");
+            registerScoreboard();
+        }
     }
 }

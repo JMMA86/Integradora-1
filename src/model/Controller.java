@@ -6,10 +6,11 @@ public class Controller {
     private ScoreTree scores;
     private PlayerList players;
     private Player currentPlayer;
+    private int currentTurn;
     private Board board;
     private Thread t;
     private boolean running;
-    private int seconds;
+    private double seconds;
     private Random rnd;
     boolean finishedGame;
 
@@ -17,19 +18,20 @@ public class Controller {
         this.scores = new ScoreTree();
         this.players = new PlayerList();
         this.running = false;
-        this.seconds = 600;
         this.currentPlayer = null;
         this.rnd = new Random();
         this.finishedGame = false;
+        this.currentTurn = 1;
     }
 
     public void startTimer() {
+        this.seconds = 600;
         running = true;
         t = new Thread(() -> {
             while (running) {
                 try {
-                    Thread.sleep(1000);
-                    seconds--;
+                    Thread.sleep(10);
+                    seconds-=10;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -55,13 +57,13 @@ public class Controller {
         board.addLadders(ladders);
     }
 
-    /** Validates if the values entered to create the table correspond to a dimension equal to or greater than 4x4
+    /** Validates if the values entered to create the table correspond to a dimension equal to or greater than 4x4. Also, snakes and ladders can´t exceed 40% of the board
      * Validates if the columns and rows entered are greater than 4
      * @param rows the number of rows of the board
      * @param columns the number of columns of the board
      */
     public boolean validateBoard(int rows, int columns, int snakes, int ladders) {
-        if (rows > 3 && columns > 3) {
+        if (rows > 3 && columns > 3 && ladders + snakes <= rows * columns * 0.4) {
             generateBoard(rows, columns, snakes, ladders);
             return true;
         } else {
@@ -94,6 +96,18 @@ public class Controller {
      */
     public String showSnakesAndLadders() {
         return printSlots(true);
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void updateCurrentTurn() {
+        if (currentTurn == 3) {
+            this.currentTurn = 1;
+        } else {
+            this.currentTurn++;
+        }
     }
 
     /**
@@ -213,7 +227,9 @@ public class Controller {
             status += String.format("\n - The new position for player '%s' is %d", currentPlayer.getId(), newPosition.getValue());
         } else {
             if(newPosition == board.getTail()) finishedGame = true;
-            status += String.format("\n - Player '%s' won the game!!", currentPlayer.getId());
+            stopTimer();
+            double score = this.seconds / 6;
+            status += String.format("\n - Player '%s' won the game!", currentPlayer.getId()) + "\nScore: " + (score);
         }
 
         // updating positions
@@ -250,8 +266,21 @@ public class Controller {
         }
     }
 
+    public char getCurrentSymbol() {
+        if (currentPlayer == null) {
+            return players.getHead().getId();
+        } else {
+            return currentPlayer.getId();
+        }
+    }
+
     public boolean hasGameFinished() {
         return finishedGame;
+    }
+
+    public void registerScore(String name) {
+        scores.add(new Score(name, this.seconds/600));
+
     }
 
 }
