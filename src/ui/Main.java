@@ -149,8 +149,8 @@ public class Main {
             controller.registerScore(name);
             System.out.println("Score registered correctly.");
             System.out.println(controller.printScoreboard());
-            controller.resetPlayers();
-            System.out.println("Game finished");
+            controller.resetGame();
+            System.out.println("\nGame finished.");
             showMenu();
         } else {
             System.out.println("Error. Try again.");

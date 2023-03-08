@@ -43,7 +43,7 @@ public class ScoreTree {
             return "";
         }
 
-        return inOrderString(current.getLeft()) + "\n[" + current.getName() + " " + formato.format(current.getValue()) + "]\n" + inOrderString(current.getRight());
+        return inOrderString(current.getRight()) + "\n[" + current.getName() + " " + formato.format(current.getValue()) + "]" + inOrderString(current.getLeft());
     }
 
     public Score getRoot() {

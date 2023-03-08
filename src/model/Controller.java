@@ -286,10 +286,10 @@ public class Controller {
     }
 
     public String printScoreboard() {
-        return "Current scoreboard:\n" + "[COD] " + "[SCR]" + scores.inOrderString();
+        return "\nCurrent scoreboard:\n" + "[COD] " + "[SCR]" + scores.inOrderString();
     }
 
-    public void resetPlayers() {
+    public void resetGame() {
         this.players = new PlayerList();
         this.running = false;
         this.currentPlayer = null;
